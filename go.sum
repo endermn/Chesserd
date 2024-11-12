@@ -1,0 +1,9 @@
+github.com/ajstarks/svgo v0.0.0-20200320125537-f189e35d30ca/go.mod h1:K08gAheRH3/J6wwsYMMT4xOr94bZjxIelGM0+d/wbFw=
+github.com/endermn/Chlib v0.0.0-20241112070945-273db3a3bd8a h1:8hM+JHUaiKyT+fju2K0OjhSJtQsANO9nmRalrgStrBc=
+github.com/endermn/Chlib v0.0.0-20241112070945-273db3a3bd8a/go.mod h1:uRcKKxcfe2XFoheUkmWD6gK0fDTk9HqqqfvOkM20Zes=
+github.com/endermn/Chlib v0.0.0-20241112073351-165b17f5dc93 h1:rypBOOc6gQUzkGR3uA92OtdVuKc73Fa+FqYTlgk+wgk=
+github.com/endermn/Chlib v0.0.0-20241112073351-165b17f5dc93/go.mod h1:uRcKKxcfe2XFoheUkmWD6gK0fDTk9HqqqfvOkM20Zes=
+github.com/endermn/Chlib v0.0.0-20241112100232-5baf3de56b43 h1:mVS8BS3gM2HpNevhMw05TUyChvZ+k/6LXghEp/e8f70=
+github.com/endermn/Chlib v0.0.0-20241112100232-5baf3de56b43/go.mod h1:uRcKKxcfe2XFoheUkmWD6gK0fDTk9HqqqfvOkM20Zes=
+github.com/notnil/chess v1.9.0 h1:YMxR5kUVjtwcuFptGU0/3q7eG3MSHQNbg0VUekvRKV0=
+github.com/notnil/chess v1.9.0/go.mod h1:cRuJUIBFq9Xki05TWHJxHYkC+fFpq45IWwk94DdlCrA=
