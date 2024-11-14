@@ -1,14 +1,15 @@
 package main
 
 import (
-	 _"fmt"
+	"flag"
+	"fmt"
 	"log"
-	"sync"
-	_ "time"
+	"time"
 
 	"github.com/endermn/Chlib"
 	"github.com/endermn/bot/engine"
 )
+
 
 func run(botTurn chess.Color, depth int) string {
 	// fen, err := chess.FEN("4k3/R7/1R6/8/8/8/8/4K3 w - - 0 1")
@@ -16,51 +17,60 @@ func run(botTurn chess.Color, depth int) string {
 	// 	panic("Failed to parse fen string")
 	// }
 	game := chess.NewGame()
+	playSelf := true
 
 	for game.Outcome() == chess.NoOutcome {
-		if game.Position().Turn() == chess.White {
-			depth = 2
-		} else {
-			depth = 3
+		if playSelf {
+			switch game.Position().Turn() {
+				case chess.White:
+					depth = 2
+				case chess.Black:
+					depth = 3
+			}
+			move := engine.InitSearch(game, depth)
+			game.Move(move)
+			log.Printf("%v", move)
+			continue
 		}
-		move := engine.InitSearch(game, depth)
-		game.Move(move)
-		log.Printf("%v", move)
-	log.Printf(game.Position().Board().Draw())
+
+		if game.Position().Turn() == botTurn {
+			start := time.Now()
+
+			move := engine.InitSearch(game, depth)
+			log.Printf("%v", move)
+			game.Move(move)
+
+			end := time.Now()
+			log.Printf("%v", end.Sub(start))
+		} else {
+			log.Printf("Your turn")
+
+			var move string
+			fmt.Scanf("%s", &move)
+			game.MoveStr(move)
+		}
+		log.Printf(game.Position().Board().Draw())
 	}
-	// for game.Outcome() == chess.NoOutcome {
-	// 	if game.Position().Turn() == botTurn {
-	// 		start := time.Now()
-	//
-	// 		move := engine.InitSearch(game, depth)
-	// 		log.Printf("%v", move)
-	// 		game.Move(move)
-	//
-	// 		end := time.Now()
-	// 		log.Printf("%v", end.Sub(start))
-	// 	} else {
-	// 		log.Printf("Your turn")
-	//
-	// 		var move string
-	// 		fmt.Scanf("%s", &move)
-	// 		game.MoveStr(move)
-	// 	}
-	// 	log.Printf(game.Position().Board().Draw())
-	// }
 	return game.Outcome().String()
 }
 
 func main() {
-	var wg sync.WaitGroup
-	outcomes := []string{}
+	fenStr := flag.String("fen", "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "FEN string representing the current board state")
+	depth := flag.Int("depth", 2, "Search depth for bot move")
+	flag.Parse()
 
-	for range 1 {
-		wg.Add(1)
-		go func() {
-			outcomes = append(outcomes, run(chess.White, 2))
-			wg.Done()
-		}()
+	if *fenStr == "" {
+		log.Fatal("No FEN string provided")
 	}
-	wg.Wait()
-	log.Printf("%v", outcomes)
+
+	fen, err := chess.FEN(*fenStr)
+	if err != nil {
+		log.Fatalf("Invalid FEN: %v", err)
+	}
+
+	game := chess.NewGame(fen)
+
+	move := engine.InitSearch(game, *depth)
+	notation := chess.AlgebraicNotation{}
+	fmt.Printf(notation.Encode(game.Position(), move))
 }
