@@ -17,14 +17,13 @@ func calcMobility(game *chess.Game) float32 {
 
 func evaluate(game *chess.Game) float32 {
 	var eval float32 = 0.0
-	// var mul int
-	//
-	// if game.Position().Turn() == chess.White {
-	// 	mul = 1
-	// } else {
-	// 	mul = -1
-	// }
+	var mul int
 
+	if game.Position().Turn() == chess.White {
+		mul = 1
+	} else {
+		mul = -1
+	}
 
 	for _, piece := range game.Position().Board().SquareMap() {
 		var colorValue int
@@ -47,7 +46,7 @@ func evaluate(game *chess.Game) float32 {
 		}
 
 	}
-	// eval += calcMobility(game) * float32(mul)
+	eval += calcMobility(game) * float32(mul)
 
 	return eval
 }
