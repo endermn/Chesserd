@@ -1,7 +1,7 @@
 package engine
 
 import (
-	"log"
+	"sync"
 
 	"github.com/endermn/Chlib"
 )
@@ -15,37 +15,60 @@ func negamax(game *chess.Game, depth int, alpha float32, beta float32) float32 {
 
 	eval := -Inf
 	moves := game.ValidMoves()
-	game.Position()
 
 	for _, move := range moves {
 		pos := game.Clone()
 		pos.Move(move)
 		evalMove := -negamax(pos, depth-1, -beta, -alpha)
-
 		eval = max(eval, evalMove)
 		alpha = max(alpha, eval)
 
 		if alpha >= beta {
-			break
+			break // Beta cutoff
 		}
 	}
+
 	return eval
 }
 
+// InitSearch starts the concurrent Negamax search on the first level of moves.
 func InitSearch(game *chess.Game, depth int) *chess.Move {
 	moves := game.ValidMoves()
 	eval := -Inf
 	var bestMove *chess.Move
+	var wg sync.WaitGroup
+	resultChan := make(chan struct {
+		move *chess.Move
+		eval float32
+	}, len(moves))
 
 	for _, move := range moves {
-		pos := game.Clone()
-		pos.Move(move)
-		evalMove := -negamax(pos, depth, -Inf, Inf)
-		if evalMove > eval {
-			eval = evalMove
-			bestMove = move
+		wg.Add(1)
+		go func(move *chess.Move) {
+			defer wg.Done()
+			pos := game.Clone()
+			pos.Move(move)
+
+			evalMove := -negamax(pos, depth-1, -Inf, Inf)
+
+			resultChan <- struct {
+				move *chess.Move
+				eval float32
+			}{move, evalMove}
+		}(move)
+	}
+
+	go func() {
+		wg.Wait()
+		close(resultChan)
+	}()
+
+	for result := range resultChan {
+		if result.eval > eval {
+			eval = result.eval
+			bestMove = result.move
 		}
 	}
-	log.Printf("%v", eval)
+
 	return bestMove
 }
