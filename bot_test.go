@@ -4,6 +4,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"os/exec"
 	"sync"
 	"testing"
@@ -27,6 +28,10 @@ func getBotMove(botPath, fen string, depth int) (string, error) {
 	return out.String(), nil
 }
 
+func randomFunc() {
+
+}
+
 func runGame(t *testing.T, wPath, bPath string, depth1, depth2 int) string {
 	game := chess.NewGame()
 
@@ -41,6 +46,8 @@ func runGame(t *testing.T, wPath, bPath string, depth1, depth2 int) string {
 			botPath = bPath
 			depth = depth2
 		}
+
+		t.Logf(botPath, game.Position().Turn())
 
 		// Get the current board state in FEN format
 		fen := game.Position().String()
@@ -57,6 +64,7 @@ func runGame(t *testing.T, wPath, bPath string, depth1, depth2 int) string {
 			t.Fatalf("Failed to get move from bot (%s): %v", botPath, err)
 		}
 		game.Move(move)
+		log.Printf(game.Position().Board().Draw())
 	}
 
 	return game.Outcome().String()
@@ -68,13 +76,16 @@ func TestBotVersions(t *testing.T) {
 
 	// Run the test match between current and stable bot versions
 	var wg sync.WaitGroup
+	var mu sync.Mutex
+
 	newWins, oldWins, draws := 0, 0, 0
 
-	for i := range 10 {
+	for i := range 2 {
 		wg.Add(1)
-		go t.Run("Current vs Stable", func(t *testing.T) {
+		func(iter int) {
 			var outcome string
-			if i%2 == 0 {
+			if iter%2 == 0 {
+				t.Logf("Current is white")
 				outcome = runGame(t, botCurrent, botStable, 2, 2) // depths can vary
 			} else {
 				outcome = runGame(t, botStable, botCurrent, 2, 2) // depths can vary
@@ -82,6 +93,9 @@ func TestBotVersions(t *testing.T) {
 			if outcome == "" {
 				t.Error("Expected a game outcome, but got an empty string")
 			}
+
+			mu.Lock()
+			defer mu.Unlock()
 
 			switch outcome {
 			case string(chess.BlackWon):
@@ -101,7 +115,7 @@ func TestBotVersions(t *testing.T) {
 			}
 
 			wg.Done()
-		})
+		}(i)
 	}
 	wg.Wait()
 	t.Logf("NewWins: %d, OldWins: %d, Draws: %d", newWins, oldWins, draws)

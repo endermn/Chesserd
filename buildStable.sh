@@ -1,19 +1,37 @@
 #!/bin/bash
 
-# Build the current version
-go build -o bin/bot_current main.go
+set -e
 
-# Checkout and build the last stable version
-last_stable_tag=$(git describe --tags $(git rev-list --tags='*-stable' --max-count=1))
-git checkout $last_stable_tag
+STABLE_BUILD_DIR="./bin/bot_stable"
+CURRENT_BUILD_DIR="./bin/bot_current"
 
-echo $last_stable_tag
+cleanup() {
+    echo "Cleaning up old builds..."
+    rm "$STABLE_BUILD_DIR" "$CURRENT_BUILD_DIR"
+}
 
-# Build the last stable version
-go build -o bin/bot_stable main.go
+echo "Finding the latest '-stable' tag..."
+LATEST_STABLE_TAG=$(git tag | grep -- '-stable$' | sort -V | tail -n 2)
 
-# Return to the current version
-git checkout -
+if [[ -z "$LATEST_STABLE_TAG" ]]; then
+    echo "Error: No '-stable' tags found."
+    exit 1
+fi
 
-# Confirm the binaries are ready
-echo "Built current version as ./bin/bot_current and stable version as ./bin/bot_stable"
+echo "Latest '-stable' tag found: $LATEST_STABLE_TAG"
+
+echo "Building the stable version..."
+git checkout "$LATEST_STABLE_TAG"
+go build -o "$STABLE_BUILD_DIR"
+
+echo "Building the current version..."
+# git checkout @
+go build -o "$CURRENT_BUILD_DIR"
+
+# Display build locations
+echo "Builds completed:"
+echo "\tStable build: $STABLE_BUILD_DIR"
+echo "\tCurrent build: $CURRENT_BUILD_DIR"
+
+# Optionally, run your test script to compare them
+# ./your_test_script.sh "$STABLE_BUILD_DIR/app" "$CURRENT_BUILD_DIR/app"
