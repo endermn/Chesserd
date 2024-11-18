@@ -30,8 +30,8 @@ go build -o "$CURRENT_BUILD_DIR"
 
 # Display build locations
 echo "Builds completed:"
-echo "\tStable build: $STABLE_BUILD_DIR"
-echo "\tCurrent build: $CURRENT_BUILD_DIR"
+echo "Stable build: $STABLE_BUILD_DIR"
+echo "Current build: $CURRENT_BUILD_DIR"
 
 # Optionally, run your test script to compare them
 # ./your_test_script.sh "$STABLE_BUILD_DIR/app" "$CURRENT_BUILD_DIR/app"
