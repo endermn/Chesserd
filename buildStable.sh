@@ -11,7 +11,7 @@ cleanup() {
 }
 
 echo "Finding the latest '-stable' tag..."
-LATEST_STABLE_TAG=$(git tag | grep -- '-stable$' | sort -V | tail -n 2)
+LATEST_STABLE_TAG=$(git tag | grep -- '-stable$' | sort -V | tail -n 1)
 
 if [[ -z "$LATEST_STABLE_TAG" ]]; then
     echo "Error: No '-stable' tags found."
@@ -25,7 +25,7 @@ git checkout "$LATEST_STABLE_TAG"
 go build -o "$STABLE_BUILD_DIR"
 
 echo "Building the current version..."
-# git checkout @
+git checkout -
 go build -o "$CURRENT_BUILD_DIR"
 
 # Display build locations

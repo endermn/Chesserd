@@ -28,10 +28,6 @@ func getBotMove(botPath, fen string, depth int) (string, error) {
 	return out.String(), nil
 }
 
-func randomFunc() {
-
-}
-
 func runGame(t *testing.T, wPath, bPath string, depth1, depth2 int) string {
 	game := chess.NewGame()
 
