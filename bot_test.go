@@ -4,7 +4,6 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"os/exec"
 	"sync"
 	"testing"
@@ -73,39 +72,38 @@ func TestBotVersions(t *testing.T) {
 
 	for i := range 10 {
 		wg.Add(1)
-		go func() {
-			t.Run("Current vs Stable", func(t *testing.T) {
-				var outcome string
-				if i % 2 == 0 {
-					outcome = runGame(t, botCurrent, botStable, 2, 2) // depths can vary
+		go t.Run("Current vs Stable", func(t *testing.T) {
+			var outcome string
+			if i%2 == 0 {
+				outcome = runGame(t, botCurrent, botStable, 2, 2) // depths can vary
+			} else {
+				outcome = runGame(t, botStable, botCurrent, 2, 2) // depths can vary
+			}
+			if outcome == "" {
+				t.Error("Expected a game outcome, but got an empty string")
+			}
+
+			switch outcome {
+			case string(chess.BlackWon):
+				if i%2 != 0 {
+					newWins++
 				} else {
-					outcome = runGame(t, botStable, botCurrent, 2, 2) // depths can vary
+					oldWins++
 				}
-				if outcome == "" {
-					t.Error("Expected a game outcome, but got an empty string")
+			case string(chess.WhiteWon):
+				if i%2 == 0 {
+					newWins++
 				} else {
-					switch outcome {
-					case string(chess.BlackWon):
-						if i % 2 != 0 {
-							newWins++
-						} else {
-							oldWins++
-						}
-					case string(chess.WhiteWon):
-						if i % 2 == 0 {
-							newWins++
-						} else {
-							oldWins++
-						}
-					default:
-						draws++
-					}
+					oldWins++
 				}
-			})
+			default:
+				draws++
+			}
+
 			wg.Done()
-		}()
+		})
 	}
 	wg.Wait()
-	log.Printf("NewWins: %d, OldWins: %d, Draws: %d", newWins, oldWins, draws)
-	log.Printf("The new changes are better with: %f percent", float32(newWins)/float32(oldWins) * 100 - 100)
+	t.Logf("NewWins: %d, OldWins: %d, Draws: %d", newWins, oldWins, draws)
+	t.Logf("The new changes are better with: %f percent", float32(newWins)/float32(oldWins)*100-100)
 }

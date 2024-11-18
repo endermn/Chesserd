@@ -48,5 +48,5 @@ func evaluate(game *chess.Game) float32 {
 	}
 	eval += calcMobility(game) * float32(mul)
 
-	return eval
+	return 0
 }

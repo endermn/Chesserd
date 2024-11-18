@@ -7,6 +7,8 @@ go build -o bin/bot_current main.go
 last_stable_tag=$(git describe --tags $(git rev-list --tags='*-stable' --max-count=1))
 git checkout $last_stable_tag
 
+echo $last_stable_tag
+
 # Build the last stable version
 go build -o bin/bot_stable main.go
 
