@@ -18,7 +18,7 @@ func calcMobility(game *chess.Game) float32 {
 }
 
 func evaluate(game *chess.Game) float32 {
-	// var eval float32 = 0.0
+	var eval float32 = 0.0
 	// var mul int
 	//
 	// if game.Position().Turn() == chess.White {
@@ -26,29 +26,29 @@ func evaluate(game *chess.Game) float32 {
 	// } else {
 	// 	mul = -1
 	// }
-	//
-	// for _, piece := range game.Position().Board().SquareMap() {
-	// 	var colorValue int
-	//
-	// 	if piece.Color() == chess.White {
-	// 		colorValue = 1
-	// 	} else {
-	// 		colorValue = -1
-	// 	}
-	//
-	// 	switch piece.Type() {
-	// 	case chess.Pawn:
-	// 		eval += float32(1 * colorValue)
-	// 	case chess.Knight, chess.Bishop:
-	// 		eval += float32(3 * colorValue)
-	// 	case chess.Rook:
-	// 		eval += float32(5 * colorValue)
-	// 	case chess.Queen:
-	// 		eval += float32(9 * colorValue)
-	// 	}
-	//
-	// }
+
+	for _, piece := range game.Position().Board().SquareMap() {
+		var colorValue int
+
+		if piece.Color() == chess.White {
+			colorValue = 1
+		} else {
+			colorValue = -1
+		}
+
+		switch piece.Type() {
+		case chess.Pawn:
+			eval += float32(1 * colorValue)
+		case chess.Knight, chess.Bishop:
+			eval += float32(3 * colorValue)
+		case chess.Rook:
+			eval += float32(5 * colorValue)
+		case chess.Queen:
+			eval += float32(9 * colorValue)
+		}
+
+	}
 	// eval += calcMobility(game) * float32(mul)
-	//
+
 	return float32(rand.Intn(10))
 }
