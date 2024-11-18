@@ -4,7 +4,6 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"os/exec"
 	"sync"
 	"testing"
@@ -18,11 +17,13 @@ func getBotMove(botPath, fen string, depth int) (string, error) {
 	cmd := exec.Command(botPath, "-fen", fen, "-depth", fmt.Sprint(depth))
 
 	var out bytes.Buffer
+	var errBuf bytes.Buffer
 	cmd.Stdout = &out
+	cmd.Stderr = &errBuf
 
 	err := cmd.Run()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error: %v, stderr: %s", err, errBuf.String())
 	}
 
 	return out.String(), nil
@@ -43,8 +44,6 @@ func runGame(t *testing.T, wPath, bPath string, depth1, depth2 int) string {
 			depth = depth2
 		}
 
-		t.Logf(botPath, game.Position().Turn())
-
 		// Get the current board state in FEN format
 		fen := game.Position().String()
 
@@ -60,7 +59,7 @@ func runGame(t *testing.T, wPath, bPath string, depth1, depth2 int) string {
 			t.Fatalf("Failed to get move from bot (%s): %v", botPath, err)
 		}
 		game.Move(move)
-		log.Printf(game.Position().Board().Draw())
+		// log.Printf(game.Position().Board().Draw())
 	}
 
 	return game.Outcome().String()
@@ -76,15 +75,14 @@ func TestBotVersions(t *testing.T) {
 
 	newWins, oldWins, draws := 0, 0, 0
 
-	for i := range 2 {
+	for i := range 10 {
 		wg.Add(1)
 		func(iter int) {
 			var outcome string
 			if iter%2 == 0 {
-				t.Logf("Current is white")
-				outcome = runGame(t, botCurrent, botStable, 2, 2) // depths can vary
+				outcome = runGame(t, botCurrent, botStable, 2, 3) // depths can vary
 			} else {
-				outcome = runGame(t, botStable, botCurrent, 2, 2) // depths can vary
+				outcome = runGame(t, botStable, botCurrent, 2, 3) // depths can vary
 			}
 			if outcome == "" {
 				t.Error("Expected a game outcome, but got an empty string")

@@ -10,7 +10,6 @@ import (
 	"github.com/endermn/bot/engine"
 )
 
-
 func run(botTurn chess.Color, depth int) string {
 	// fen, err := chess.FEN("4k3/R7/1R6/8/8/8/8/4K3 w - - 0 1")
 	// if err != nil {
@@ -22,10 +21,10 @@ func run(botTurn chess.Color, depth int) string {
 	for game.Outcome() == chess.NoOutcome {
 		if playSelf {
 			switch game.Position().Turn() {
-				case chess.White:
-					depth = 2
-				case chess.Black:
-					depth = 3
+			case chess.White:
+				depth = 2
+			case chess.Black:
+				depth = 3
 			}
 			move := engine.InitSearch(game, depth)
 			game.Move(move)
@@ -71,6 +70,6 @@ func main() {
 	game := chess.NewGame(fen)
 
 	move := engine.InitSearch(game, *depth)
-	notation := chess.AlgebraicNotation{}
-	fmt.Printf(notation.Encode(game.Position(), move))
+	// notation := chess.AlgebraicNotation{}
+	fmt.Print(move)
 }
