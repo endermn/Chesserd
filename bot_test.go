@@ -17,6 +17,7 @@ func getBotMove(botPath, fen string, depth int) (string, error) {
 
 	var out bytes.Buffer
 	var errBuf bytes.Buffer
+
 	cmd.Stdout = &out
 	cmd.Stderr = &errBuf
 
