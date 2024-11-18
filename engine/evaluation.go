@@ -1,6 +1,8 @@
 package engine
 
 import (
+	"math/rand"
+
 	"github.com/endermn/Chlib"
 )
 
@@ -24,7 +26,7 @@ func evaluate(game *chess.Game) float32 {
 	// } else {
 	// 	mul = -1
 	// }
-
+	//
 	// for _, piece := range game.Position().Board().SquareMap() {
 	// 	var colorValue int
 	//
@@ -47,6 +49,6 @@ func evaluate(game *chess.Game) float32 {
 	//
 	// }
 	// eval += calcMobility(game) * float32(mul)
-
-	return 0
+	//
+	return float32(rand.Intn(10))
 }
