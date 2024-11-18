@@ -70,6 +70,6 @@ func main() {
 	game := chess.NewGame(fen)
 
 	move := engine.InitSearch(game, *depth)
-	// notation := chess.AlgebraicNotation{}
-	fmt.Print(move)
+	notation := chess.AlgebraicNotation{}
+	fmt.Printf(notation.Encode(game.Position(), move))
 }

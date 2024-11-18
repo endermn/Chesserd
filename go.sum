@@ -5,5 +5,7 @@ github.com/endermn/Chlib v0.0.0-20241112073351-165b17f5dc93 h1:rypBOOc6gQUzkGR3u
 github.com/endermn/Chlib v0.0.0-20241112073351-165b17f5dc93/go.mod h1:uRcKKxcfe2XFoheUkmWD6gK0fDTk9HqqqfvOkM20Zes=
 github.com/endermn/Chlib v0.0.0-20241112100232-5baf3de56b43 h1:mVS8BS3gM2HpNevhMw05TUyChvZ+k/6LXghEp/e8f70=
 github.com/endermn/Chlib v0.0.0-20241112100232-5baf3de56b43/go.mod h1:uRcKKxcfe2XFoheUkmWD6gK0fDTk9HqqqfvOkM20Zes=
+github.com/endermn/Chlib v0.0.0-20241118084955-12fe92b81b45 h1:bz7I2kxZm/rUHQR95FgvDnmpBrS6T/ZjVqkFHQEX+HM=
+github.com/endermn/Chlib v0.0.0-20241118084955-12fe92b81b45/go.mod h1:uRcKKxcfe2XFoheUkmWD6gK0fDTk9HqqqfvOkM20Zes=
 github.com/notnil/chess v1.9.0 h1:YMxR5kUVjtwcuFptGU0/3q7eG3MSHQNbg0VUekvRKV0=
 github.com/notnil/chess v1.9.0/go.mod h1:cRuJUIBFq9Xki05TWHJxHYkC+fFpq45IWwk94DdlCrA=
