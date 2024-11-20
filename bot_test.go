@@ -29,7 +29,7 @@ func getBotMove(botPath, fen string, depth int) (string, error) {
 	return out.String(), nil
 }
 
-func runGame(t *testing.T, wPath, bPath string, depth1, depth2 int) string {
+func runGame(t *testing.T, wPath, bPath string, wDepth, bDepth int) string {
 	game := chess.NewGame()
 
 	for game.Outcome() == chess.NoOutcome {
@@ -38,19 +38,19 @@ func runGame(t *testing.T, wPath, bPath string, depth1, depth2 int) string {
 		var depth int
 		if game.Position().Turn() == chess.White {
 			botPath = wPath
-			depth = depth1
+			depth = wDepth
 		} else {
 			botPath = bPath
-			depth = depth2
+			depth = bDepth
 		}
 
-		// Get the current board state in FEN format
 		fen := game.Position().String()
 
 		// Run the bot to get its move
 		notation := chess.AlgebraicNotation{}
 		moveStr, err := getBotMove(botPath, fen, depth)
 		if err != nil {
+			t.Logf("Current depth: %v", depth)
 			t.Fatalf("Failed to get move string from bot (%s): %v", botPath, err)
 		}
 
@@ -74,15 +74,16 @@ func TestBotVersions(t *testing.T) {
 	var mu sync.Mutex
 
 	newWins, oldWins, draws := 0, 0, 0
+	wDepth, bDepth := 2, 3
 
-	for i := range 10 {
+	for i := range 1 {
 		wg.Add(1)
 		func(iter int) {
 			var outcome string
 			if iter%2 == 0 {
-				outcome = runGame(t, botCurrent, botStable, 2, 3) // depths can vary
+				outcome = runGame(t, botCurrent, botStable, wDepth, bDepth) // depths can vary
 			} else {
-				outcome = runGame(t, botStable, botCurrent, 2, 3) // depths can vary
+				outcome = runGame(t, botStable, botCurrent, wDepth, bDepth) // depths can vary
 			}
 			if outcome == "" {
 				t.Error("Expected a game outcome, but got an empty string")

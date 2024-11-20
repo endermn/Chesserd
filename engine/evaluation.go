@@ -38,11 +38,11 @@ func evaluate(game *chess.Game) float32 {
 		case chess.Pawn:
 			eval += float32(1 * colorValue)
 		case chess.Knight, chess.Bishop:
-			eval += float32(3 * colorValue)
+			eval += 3.5 * float32(colorValue)
 		case chess.Rook:
-			eval += float32(5 * colorValue)
+			eval += 5.25 * float32(colorValue)
 		case chess.Queen:
-			eval += float32(9 * colorValue)
+			eval += float32(10 * colorValue)
 		}
 
 	}

@@ -35,7 +35,7 @@ func negamax(game *chess.Game, depth int, alpha float32, beta float32) float32 {
 func InitSearch(game *chess.Game, depth int) *chess.Move {
 	moves := game.ValidMoves()
 	eval := -Inf
-	var bestMove *chess.Move
+	bestMove := moves[0]
 	var wg sync.WaitGroup
 	resultChan := make(chan struct {
 		move *chess.Move
