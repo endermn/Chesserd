@@ -31,7 +31,6 @@ func negamax(game *chess.Game, depth int, alpha float32, beta float32) float32 {
 	return eval
 }
 
-// InitSearch starts the concurrent Negamax search on the first level of moves.
 func InitSearch(game *chess.Game, depth int) *chess.Move {
 	moves := game.ValidMoves()
 	eval := -Inf
