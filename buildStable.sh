@@ -11,8 +11,8 @@ cleanup() {
 }
 
 echo "Finding the latest '-stable' tag..."
-LATEST_STABLE_TAG=$(git tag | grep -- '-stable$' | tail -n 1)
-LATEST_STABLE_TAG="v0.0.2-stable"
+LATEST_STABLE_TAG=$(git tag --sort=-creatordate | head -n 2 | tail -n 1)
+echo $LATEST_STABLE_TAG
 
 if [[ -z "$LATEST_STABLE_TAG" ]]; then
     echo "Error: No '-stable' tags found."
